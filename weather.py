@@ -53,7 +53,7 @@ central_label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 # retrieves weather data from openweathermap.org
 def getWeather():
-    #try:
+    try:
         city_name = textfield.get()
         
         #api key
@@ -65,7 +65,7 @@ def getWeather():
         
         #requests weather data
         json_data = requests.get(api).json()
-        description = json_data["weather"][0]["description"]
+        description = json_data["weather"][0]["main"]
         humidity = json_data["main"]["humidity"]
         temperature = int(json_data["main"]["temp"] - 273.15)
         wind = json_data["wind"]["speed"]
@@ -150,22 +150,53 @@ def getWeather():
         
         
         #removes all whitespaces from descpription to match file names
+        
+        """"
+        match (description):
+            
+            #thunderstorm cases
+            case "thunderstorm with light rain":
+                description = "thunderstorm"
+            case "thunderstorm with rain":
+                description = "thunderstorm"
+            case "thunderstorm with heavy rain":
+                description = "thunderstorm"
+            case "light thunderstorm":
+                description = "thunderstorm"
+            case "thunderstorm":
+                description = "thunderstorm"
+            case "heavy thunderstorm":
+                description = "thunderstorm"
+            case "ragged thunderstorm":
+                description = "thunderstorm"
+            case "thunderstorm with light drizzle":
+                description = "thunderstorm"
+            case "thunderstorm with drizzle":
+                description = "thunderstorm"
+            case "thunderstorm with heavy drizzle":
+                description = "thunderstorm"
+        """
+        
+        
+        
         description = description.replace(" ","")
-        description = "clearsky"
+        print(description)
         image_path = "images/"+description+".gif"
                 
                 
         #displays the correct weather icon
-        #central_label.place_forget()
-        #img = Image.open(image_path)
-        #img_resized = img.resize((250,250))
-        #weather_icon = ImageTk.PhotoImage(img_resized)
-        #icon_label = Label(win, image=weather_icon)
-        #icon_label.place(relx=0.5, rely=0.45, anchor=CENTER)
+        central_label.place_forget()
+        img = Image.open(image_path)
+        img_resized = img.resize((250,250))
+        weather_icon = ImageTk.PhotoImage(img_resized)
+        icon_label = Label(win, image=weather_icon)
+        icon_label.image = weather_icon
+        icon_label.config(bg = "#87ceeb")
+        icon_label.place(relx=0.5, rely=0.45, anchor=CENTER)
 
                     
-    #except Exception as e:
-        #central_label.config(text="invalid input")
+    except Exception as e:
+        central_label.config(text="invalid input")
     
 
 #creates the search button
